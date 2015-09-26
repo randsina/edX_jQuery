@@ -47,10 +47,30 @@
     <div class="rating-circle"></div>
   </div>
 
-  <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
   <script>
-    // your answer would go here
+    $(function() {
+      $('.rating-circle').hover(function() {
+        var element = $(this);
+
+        element.parent().children().removeClass('rating-chosen');
+        element.addClass('rating-hover');
+        element.prevAll().addClass('rating-hover');
+        element.nextAll().removeClass('rating-hover');
+      }, function() {
+        var element = $(this);
+        element.parent().children().removeClass('rating-hover');
+        $('[chosen="true"]').addClass('rating-chosen');
+      });
+
+      $('.rating-circle').click(function(event) {
+        var element = $(this);
+        element.parent().children().removeAttr('chosen');
+        element.addClass('rating-chosen').attr('chosen', 'true');
+        element.prevAll().addClass('rating-chosen').attr('chosen', 'true');
+      });
+    });
   </script>
 </body>
 
