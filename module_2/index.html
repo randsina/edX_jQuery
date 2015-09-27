@@ -1,0 +1,91 @@
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <style>
+    body {
+      font-family: Verdana;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: darkblue;
+    }
+
+    .rating-circle {
+      height: 2em;
+      width: 2em;
+      border: .1em solid black;
+      border-radius: 1.1em;
+      display: inline-block;
+      margin: 0;
+      padding: .1em;
+    }
+
+    .rating-hover {
+      background-color: yellow;
+    }
+
+    .rating-chosen {
+      background-color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Contoso Web Developer Conference</h1>
+  <h2>Finding elements using jQuery</h2>
+  <div>This session is about identifying elements using jQuery methods and selectors.</div>
+  <h3>Rate this session</h3>
+  <div id="rating-container" max-value="5">
+  </div>
+
+  <div>
+    <label for="max-value">Enter max value:</label>
+    <input type="text" id="max-value" />
+    <button type="button" id="update-max-value">Update max value</button>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+  <script>
+    $(function() {
+      var times = $('#rating-container').attr('max-value');
+      addCircles(times);
+      $('#rating-container').on('mouseenter', '.rating-circle', function() {
+        var element = $(this);
+        element.parent().children().removeClass('rating-chosen');
+        element.addClass('rating-hover');
+        element.prevAll().addClass('rating-hover');
+        element.nextAll().removeClass('rating-hover');
+      });
+      $('#rating-container').on('mouseleave', '.rating-circle', function() {
+        var element = $(this);
+        element.parent().children().removeClass('rating-hover');
+        $('[chosen="true"]').addClass('rating-chosen');
+      });
+      $('#rating-container').on('click', '.rating-circle', function(event) {
+        var element = $(this);
+        element.parent().children().removeAttr('chosen');
+        element.addClass('rating-chosen').attr('chosen', 'true');
+        element.prevAll().addClass('rating-chosen').attr('chosen',
+          'true');
+      });
+      $('button#update-max-value').click(function(event) {
+        var maxValue = $('input#max-value').val();
+        addCircles(maxValue);
+      });
+
+      function addCircles(times) {
+        var circle = ' < div class = "rating-circle" > < /div>';
+        $('#rating-container').empty().attr('max-value', times);
+        for (var i = 0; i < times; i++) {
+          $('#rating-container').append(circle);
+        }
+      };
+    });
+  </script>
+</body>
+
+</html>
