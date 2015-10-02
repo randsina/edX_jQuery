@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Web Worker Demo</title>
+  <style media="screen">
+    body {
+      font-size: 26px;
+      font-family: Verdana;
+    }
+
+    div {
+      margin-bottom: .3em;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <input type="text" id="message" class="form-control" />
+    <button type="button" class="btn" id="send-message" disabled="disabled" name="button">Send message</button>
+  </div>
+
+  <ul id="messages">
+
+  </ul>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script>
+    if (Worker == null) {
+      alert('You need to upgrade your browser!');
+    } else {
+      var worker = new Worker('./worker.js');
+      worker.addEventListener('message', function(e) {
+        if (e.data === "READY") {
+          $("#messages").append('<li>Worker ready</li>');
+          $("#send-message").removeAttr('disabled').click(function(event) {
+            worker.postMessage($('#message').val());
+          });
+          $('#message').focus();
+        } else {
+          $('#messages').append('<li>' + e.data + '</li>');
+          $('#message').val('').focus();
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
